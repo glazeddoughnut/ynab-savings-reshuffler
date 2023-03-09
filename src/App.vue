@@ -9,7 +9,7 @@
       <!-- Display an error if we got one -->
       <div v-if="error">
         <h1 class="display-4">Oops!</h1>
-        <p class="lead">{{error}}</p>
+        <p class="lead">{{ error }}</p>
         <button class="btn btn-primary" @click="resetToken">Try Again &gt;</button>
       </div>
 
@@ -21,11 +21,16 @@
           <h1 class="display-4">Congrats!</h1>
           <p class="lead">You have successfully initialized a new YNAB API Application!</p>
           <p>The next step is the OAuth configuration, you can
-            <a href="https://github.com/jlumbroso/ynab-api-starter-kit#step-2-obtain-an-oauth-client-id-so-the-app-can-access-the-ynab-api">read
-              detailed instructions in the README.md</a>. Essentially:</p>
+            <a
+              href="https://github.com/jlumbroso/ynab-api-starter-kit#step-2-obtain-an-oauth-client-id-so-the-app-can-access-the-ynab-api">read
+              detailed instructions in the README.md</a>. Essentially:
+          </p>
           <ul>
-            <li>Make sure to be logged into your YNAB account, go to your <a href="https://app.youneedabudget.com/settings/developer" target="_blank" rel="noopener noreferrer">YNAB Developer Settings</a> and create a new OAuth Application.</li>
-            <li>Enter the URL of this project as a Redirect URI (in addition to the existing three options), then "Save Application."</li>
+            <li>Make sure to be logged into your YNAB account, go to your <a
+                href="https://app.youneedabudget.com/settings/developer" target="_blank" rel="noopener noreferrer">YNAB
+                Developer Settings</a> and create a new OAuth Application.</li>
+            <li>Enter the URL of this project as a Redirect URI (in addition to the existing three options), then "Save
+              Application."</li>
             <li>Copy your Client ID and Redirect URI into the <em>src/config.json</em> file of your project.</li>
             <li>Then build your amazing app!</li>
           </ul>
@@ -41,16 +46,16 @@
 
         <!-- Otherwise if we have a token, show the budget select -->
         <Budgets v-else-if="!budgetId" :budgets="budgets" :selectBudget="selectBudget" />
-                
+
         <!-- If a budget has been selected, display transactions from that budget -->
-        <div v-else-if="false">
+        <div v-else-if="1 === 0">
           <Transactions :transactions="transactions" />
           <button class="btn btn-info" @click="budgetId = null">&lt; Select Another Budget</button>
-        </div> 
-        
+        </div>
+
         <!-- If a budget has been selected, display categories from that budget -->
-        <div v-else>
-          <Categories :categories="categories" />
+        <div v-else-if="!loading">
+          <Categories :category_groups="category_groups" :accounts="accounts" />
           <button class="btn btn-info" @click="budgetId = null">&lt; Select Another Budget</button>
         </div>
 
@@ -73,10 +78,11 @@ import Nav from './components/Nav.vue';
 import Footer from './components/Footer.vue';
 import Budgets from './components/Budgets.vue';
 import Transactions from './components/Transactions.vue';
+import Categories from './components/Categories.vue';
 
 export default {
   // The data to feed our templates
-  data () {
+  data() {
     return {
       ynab: {
         clientId: config.clientId,
@@ -89,6 +95,8 @@ export default {
       budgetId: null,
       budgets: [],
       transactions: [],
+      category_groups: [],
+      accounts: []
     }
   },
   // When this component is created, check whether we need to get a token,
@@ -122,16 +130,26 @@ export default {
       this.loading = true;
       this.error = null;
       this.budgetId = id;
-      this.transactions = [];
+      this.category_groups = [];
+      this.accounts = [];
+      //this.transactions = [];
       //this.api.transactions.getTransactions(id).then((res) => {
       //  this.transactions = res.data.transactions;
       this.api.categories.getCategories(id).then((res) => {
-        this.categories = res.data.categories;
+        this.category_groups = res.data.category_groups;
       }).catch((err) => {
         this.error = err.error.detail;
       }).finally(() => {
-        this.loading = false;
+        this.api.accounts.getAccounts(id).then((res) => {
+          this.accounts = res.data.accounts;
+        }).catch((err) => {
+          this.error = err.error.detail;
+        }).finally(() => {
+          this.loading = false;
+        });
       });
+
+
     },
     // This builds a URI to get an access token from YNAB
     // https://api.youneedabudget.com/#outh-applications
@@ -144,10 +162,10 @@ export default {
     // First it looks in the location.hash and then sessionStorage
     findYNABToken() {
       let token = null;
-      const search = window.location.hash.substring(1).replace(/&/g, '","').replace(/=/g,'":"');
+      const search = window.location.hash.substring(1).replace(/&/g, '","').replace(/=/g, '":"');
       if (search && search !== '') {
         // Try to get access_token from the hash returned by OAuth
-        const params = JSON.parse('{"' + search + '"}', function(key, value) {
+        const params = JSON.parse('{"' + search + '"}', function (key, value) {
           return key === '' ? value : decodeURIComponent(value);
         });
         token = params.access_token;
