@@ -41,10 +41,16 @@
 
         <!-- Otherwise if we have a token, show the budget select -->
         <Budgets v-else-if="!budgetId" :budgets="budgets" :selectBudget="selectBudget" />
-
+                
         <!-- If a budget has been selected, display transactions from that budget -->
-        <div v-else>
+        <div v-else-if="false">
           <Transactions :transactions="transactions" />
+          <button class="btn btn-info" @click="budgetId = null">&lt; Select Another Budget</button>
+        </div> 
+        
+        <!-- If a budget has been selected, display categories from that budget -->
+        <div v-else>
+          <Categories :categories="categories" />
           <button class="btn btn-info" @click="budgetId = null">&lt; Select Another Budget</button>
         </div>
 
@@ -117,8 +123,10 @@ export default {
       this.error = null;
       this.budgetId = id;
       this.transactions = [];
-      this.api.transactions.getTransactions(id).then((res) => {
-        this.transactions = res.data.transactions;
+      //this.api.transactions.getTransactions(id).then((res) => {
+      //  this.transactions = res.data.transactions;
+      this.api.categories.getCategories(id).then((res) => {
+        this.categories = res.data.categories;
       }).catch((err) => {
         this.error = err.error.detail;
       }).finally(() => {
@@ -163,7 +171,8 @@ export default {
     Nav,
     Footer,
     Budgets,
-    Transactions
+    Transactions,
+    Categories
   }
 }
 </script>
