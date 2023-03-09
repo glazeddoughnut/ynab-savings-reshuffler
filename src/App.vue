@@ -4,7 +4,7 @@
     <div class="container">
 
       <!-- Display a loading message if loading -->
-      <h1 v-if="loading" class="display-4">Loading...</h1>
+      <h1 v-if="loading" class="display-4">Loading....</h1>
 
       <!-- Display an error if we got one -->
       <div v-if="error">
