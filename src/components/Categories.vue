@@ -38,21 +38,41 @@
         <td>{{ convertAmount(totalCheckingAccount) }}</td>
         <td style="background-color: lightgray">{{ convertAmount(totalSavingsBudgetAccount) }}</td>
         <td style="background-color: lightgray">{{ convertAmount(totalSavingsTrackingAccount) }}</td>
-        <td style="background-color: lightgray">{{ convertAmount(totalSavingsBudgetAccount+totalSavingsTrackingAccount) }}</td>
-        <td>{{ convertAmount(totalCheckingAccount + totalSavingsBudgetAccount+totalSavingsTrackingAccount) }}</td>
+        <td style="background-color: lightgray">{{ convertAmount(totalSavingsBudgetAccount + totalSavingsTrackingAccount)
+        }}
+        </td>
+        <td>{{ convertAmount(totalCheckingAccount + totalSavingsBudgetAccount + totalSavingsTrackingAccount) }}</td>
       </tr>
       <tr>
         <td>Difference</td>
-        <td>{{ convertAmount(totalCheckingAccount-totalChecking) }}</td>
-        <td>{{ convertAmount(totalSavingsBudgetAccount-totalSavings) }}</td>
+        <td>{{ convertAmount(totalCheckingAccount - totalChecking) }}</td>
+        <td>{{ convertAmount(totalSavingsBudgetAccount - totalSavings) }}</td>
         <td></td>
         <td></td>
         <td></td>
       </tr>
     </table>
 
-    <h4 v-if="totalCheckingAccount-totalChecking < 0">Please move {{ convertAmount(totalChecking-totalCheckingAccount) }} from savings to checking at the bank to cover all budgeted amounts.</h4>
-    <h4 v-if="totalChecking-totalCheckingAccount < 0">Please move {{ convertAmount(totalCheckingAccount-totalChecking) }} from checking to savings at the bank to earn more interest.</h4>
+    <h4 v-if="totalCheckingAccount - totalChecking < 0">
+      Please move {{ convertAmount(totalChecking - totalCheckingAccount) }}
+      from savings to checking at the bank to cover all budgeted amounts.
+    </h4>
+    <h4 v-if="totalChecking - totalCheckingAccount < 0">
+      Please move {{ convertAmount(totalCheckingAccount - totalChecking) }}
+      from checking to savings at the bank to earn more interest.
+    </h4>
+
+    <p>If Savings balance at Affinity = {{ convertAmount(clearedSavingsBudgetAccount + clearedSavingsTrackingAccount) }}
+      then both Budget and Tracking YNAB savings accounts reconcile at current amounts.</p>
+    <p>If Checking balance at Affinity = {{ convertAmount(clearedCheckingAccount) }} then the YNAB Checking account
+      reconciles at the current amount.</p>
+
+    <p>
+      Checking accounts have "YSRC" in their note.<br />
+      Savings accounts have "YSRS" in their note.<br />
+      Category groups above the group called "==Below Is Not Checking==" are checking.<br/>
+      Category groups below the group called "==Below is Savings==" are savings.
+    </p>
   </div>
 </template>
 
@@ -116,18 +136,32 @@ export default {
       });
       return total;
     },
+    getCheckingAccounts() {
+      return this.accounts.filter((item) => item.note && item.note.includes("YSRC"));
+    },
+    getSavingsBudgetAccounts() {
+      return this.accounts.filter((item) => item.note && item.note.includes("YSRS") && item.on_budget);
+    },
+    getSavingsTrackingAccounts() {
+      return this.accounts.filter((item) => item.note && item.note.includes("YSRS") && !item.on_budget);
+    },
     totalCheckingAccount() {
-      console.log(this.accounts);
-      var total = this.accounts.find((item) => item.name === "Affinity checking").balance;
-      return total;
+      return this.getCheckingAccounts.reduce((ac, it) => ac + it.balance, 0);
     },
     totalSavingsBudgetAccount() {
-      var total = this.accounts.find((item) => item.name === "Affinity MM Budget").balance;
-      return total;
+      return this.getSavingsBudgetAccounts.reduce((ac, it) => ac + it.balance, 0);
     },
     totalSavingsTrackingAccount() {
-      var total = this.accounts.find((item) => item.name === "Affinity MM Tracking").balance;
-      return total;
+      return this.getSavingsTrackingAccounts.reduce((ac, it) => ac + it.balance, 0);
+    },
+    clearedSavingsBudgetAccount() {
+      return this.getSavingsBudgetAccounts.reduce((ac, it) => ac + it.cleared_balance, 0);
+    },
+    clearedSavingsTrackingAccount() {
+      return this.getSavingsTrackingAccounts.reduce((ac, it) => ac + it.cleared_balance, 0);
+    },
+    clearedCheckingAccount() {
+      return this.getCheckingAccounts.reduce((ac, it) => ac + it.cleared_balance, 0);
     }
   }
 }
