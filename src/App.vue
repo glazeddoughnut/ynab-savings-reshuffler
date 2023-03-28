@@ -18,7 +18,7 @@
 
         <!-- If we dont have a token ask the user to authorize with YNAB -->
         <form v-if="!ynab.token">
-          <h1 class="display-4">Congrats!</h1>
+          <!-- <h1 class="display-4">Congrats!</h1>
           <p class="lead">You have successfully initialized a new YNAB API Application!</p>
           <p>The next step is the OAuth configuration, you can
             <a
@@ -36,7 +36,7 @@
           </ul>
           <p>If you have any questions please reach out to us at <strong>api@youneedabudget.com</strong>.</p>
           <p>&nbsp;</p>
-
+-->
           <div class="form-group">
             <h2>Hello!</h2>
             <p class="lead">If you would like to use this App, please authorize with YNAB!</p>
