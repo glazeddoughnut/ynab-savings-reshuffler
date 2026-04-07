@@ -62,7 +62,7 @@ jobs:
           publish_branch: gh-pages
           publish_dir: ./public
           ## If deploying on a custom domain:
-          # cname: mycustomdomain.com
+          cname: ynab.erinpotter.com
 
       - name: "(If failure) deploy to 'gh-pages' branch (backup using SSH deploy key --- requires configuration)"
         id: deploy-with-ssh-key
@@ -76,4 +76,4 @@ jobs:
           publish_branch: gh-pages
           publish_dir: ./public
           ## If deploying on a custom domain:
-          # cname: mycustomdomain.com
+          cname: ynab.erinpotter.com
