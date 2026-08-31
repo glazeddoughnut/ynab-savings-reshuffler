@@ -3,10 +3,13 @@ const webpack = require("webpack");
 const { VueLoaderPlugin } = require("vue-loader");
 
 module.exports = {
-  entry: "./src/main.js",
+  entry: {
+    build: "./src/main.js",
+    savings: "./src/savings.js"
+  },
   mode: process.env.NODE_ENV || "development",
   output: {
-    filename: "build.js",
+    filename: "[name].js",
     publicPath: "/dist/",
     path: path.resolve(__dirname, "./dist"),
   },
