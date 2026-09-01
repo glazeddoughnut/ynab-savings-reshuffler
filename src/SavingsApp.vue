@@ -25,9 +25,9 @@
           </span>
 
           <strong
-            :class="month.change >= 0 ? 'text-success' : 'text-danger'"
+            :class="month.Change >= 0 ? 'text-success' : 'text-danger'"
           >
-            {{ signedCurrency(month.change) }}
+            {{ signedCurrency(month.Change) }}
           </strong>
         </div>
 
