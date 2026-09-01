@@ -1,20 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Where Did the Savings Go?</title>
 
-  <link
-    rel="stylesheet"
-    href="https://stackpath.bootstrapcdn.com/bootswatch/4.3.1/flatly/bootstrap.min.css"
-  />
+  <link rel="stylesheet" href="savings.css">
 </head>
 
 <body>
-  <div id="savings-app"></div>
+  <main class="container">
+    <h1>Where Did the Savings Go?</h1>
 
-  <script src="dist/savings.js"></script>
+    <div id="loading">Loading...</div>
+    <div id="error" class="error" hidden></div>
+    <div id="months"></div>
+  </main>
+
+  <script src="savings.js"></script>
 </body>
 </html>
