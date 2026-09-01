@@ -4,12 +4,11 @@ const { VueLoaderPlugin } = require("vue-loader");
 
 module.exports = {
   entry: {
-    build: "./src/main.js",
-    savings: "./src/savings.js"
+    build: "./src/main.js"
   },
   mode: process.env.NODE_ENV || "development",
   output: {
-    filename: "[name].js",
+    filename: "build.js",
     publicPath: "/dist/",
     path: path.resolve(__dirname, "./dist"),
   },
