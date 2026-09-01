@@ -11,17 +11,17 @@
     <div v-else>
       <section
         v-for="month in months"
-        :key="month.month"
+        :key="month.Month"
         class="my-5"
       >
-        <h2>{{ month.month }}</h2>
+        <h2>{{ month.Month }}</h2>
 
         <div class="d-flex justify-content-between mb-3">
           <span>
             Savings:
-            {{ currency(month.startingBalance) }}
+            {{ currency(month.StartingBalance) }}
             →
-            {{ currency(month.endingBalance) }}
+            {{ currency(month.EndingBalance) }}
           </span>
 
           <strong
@@ -32,19 +32,19 @@
         </div>
 
         <div
-          v-for="expense in month.expenses"
-          :key="`${expense.date}-${expense.category}-${expense.amount}`"
+          v-for="expense in month.Expenses"
+          :key="`${expense.Date}-${expense.Category}-${expense.Amount}`"
           class="row border-top py-2"
         >
           <div class="col">
-            <strong>{{ expense.category }}</strong>
+            <strong>{{ expense.Category }}</strong>
             <div class="text-muted">
-              {{ expense.description }}
+              {{ expense.Description }}
             </div>
           </div>
 
           <div class="col-auto">
-            {{ currency(expense.amount) }}
+            {{ currency(expense.Amount) }}
           </div>
         </div>
       </section>
